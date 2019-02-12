@@ -1,0 +1,24 @@
+kind: pipeline
+name: cf-tools
+
+steps:
+  - name: build_credhub
+    image: golang:1.11-alpine
+    commands:
+      - git clone https://github.com/cloudfoundry-incubator/credhub-cli $GOPATH/src/code.cloudfoundry.org/credhub-cli
+      - cd $GOPATH/src/code.cloudfoundry.org/credhub-cli
+      - VERSION2=$(git tag | grep -E "^2.*" | sort -r | head -1)
+      - VERSION1=$(git tag | grep -E "^1.*" | sort -r | head -1)
+      - sed -i 's/go build/CGO_ENABLED=0 go build/g' Makefile
+      - make VERSION=$VERSION1 build
+
+
+  - name: build_docker
+    image: plugins/docker
+    settings:
+      username:
+        from_secret:
+      password:
+        from_secret:
+      repo:
+      tags:
