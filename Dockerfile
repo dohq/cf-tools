@@ -34,23 +34,18 @@ ENV FLY_CLI_VERSION 5.4.0
 ENV UAAC_CLI_VERSION 4.1.0
 
 RUN apk add --update-cache --no-cache \
-      build-base && \
-    gem install cf-uaac -v ${UAAC_CLI_VERSION} -N && \
-    wget "https://github.com/cloudfoundry/bosh-cli/releases/download/v${BOSH_CLI_VERSION}/bosh-cli-${BOSH_CLI_VERSION}-linux-amd64" -O /usr/local/bin/bosh && \
-    chmod +x /usr/local/bin/bosh && \
-    wget "https://github.com/concourse/concourse/releases/download/v${FLY_CLI_VERSION}/fly-${FLY_CLI_VERSION}-linux-amd64.tgz" && \
-    tar zxf fly-${FLY_CLI_VERSION}-linux-amd64.tgz fly && \
-    rm -rf fly-${FLY_CLI_VERSION}-linux-amd64.tgz && \
-    mv fly /usr/local/bin/fly && \
-    chmod +x /usr/local/bin/fly && \
-    wget "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=${CF_CLI_VERSION}&source=github-rel" -O cf-${CF_CLI_VERSION}.tgz && \
-    tar zxf cf-${CF_CLI_VERSION}.tgz cf && \
-    rm -rf cf-${CF_CLI_VERSION}.tgz && \
-    mv cf /usr/local/bin/cf && \
-    chmod +x /usr/local/bin/cf && \
-    wget "https://github.com/pivotal-cf/om/releases/download/${OM_CLI_VERSION}/om-linux-${OM_CLI_VERSION}" -O /usr/local/bin/om && \
-    chmod +x /usr/local/bin/om && \
-    apk del build-base
+      build-base curl tar && \
+      gem install cf-uaac -v ${UAAC_CLI_VERSION} -N && \
+      curl -fsL -o /usr/local/bin/bosh "https://github.com/cloudfoundry/bosh-cli/releases/download/v${BOSH_CLI_VERSION}/bosh-cli-${BOSH_CLI_VERSION}-linux-amd64" && \
+      chmod +x /usr/local/bin/bosh && \
+      curl -fsL -o /usr/local/bin/om "https://github.com/pivotal-cf/om/releases/download/${OM_CLI_VERSION}/om-linux-${OM_CLI_VERSION}" && \
+      chmod +x /usr/local/bin/om && \
+      curl -fsL "https://github.com/concourse/concourse/releases/download/v${FLY_CLI_VERSION}/fly-${FLY_CLI_VERSION}-linux-amd64.tgz" | tar zx -C /usr/local/bin && \
+      chmod +x /usr/local/bin/fly && \
+      curl -fsL "https://packages.cloudfoundry.org/stable?release=linux64-binary&version=${CF_CLI_VERSION}&source=github-rel" | tar zx -C /usr/local/bin && \
+      chmod +x /usr/local/bin/cf && \
+      apk del build-base && \
+      apk add --update-cache --no-cache libstdc++
 
 COPY --from=builder /go/credhub /usr/local/bin/
 COPY --from=builder /go/credhub1 /usr/local/bin/
