@@ -32,7 +32,7 @@ ENV FLY_CLI_VERSION 5.4.0
 ENV UAAC_CLI_VERSION 4.1.0
 
 RUN apk add --update-cache --no-cache \
-      build-base libstdc++ curl tar && \
+      build-base libstdc++ curl tar bash && \
     gem install cf-uaac -v ${UAAC_CLI_VERSION} -N && \
     curl -fsL -o /usr/local/bin/bosh "https://github.com/cloudfoundry/bosh-cli/releases/download/v${BOSH_CLI_VERSION}/bosh-cli-${BOSH_CLI_VERSION}-linux-amd64" && \
     chmod +x /usr/local/bin/bosh && \
