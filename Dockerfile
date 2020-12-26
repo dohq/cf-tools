@@ -21,7 +21,7 @@ RUN apt install git && \
 FROM ruby:2.4-alpine as cf-tools
 
 # bosh cli version
-ENV BOSH_CLI_VERSION 6.2.1
+ENV BOSH_CLI_VERSION 6.4.1
 # cf cli version
 ENV CF_CLI_VERSION 6.46.0
 # om cli version
@@ -32,6 +32,8 @@ ENV FLY_CLI_VERSION 6.2.0
 ENV UAAC_CLI_VERSION 4.1.0
 # terraform
 ENV TERRAFORM_CLI_VERSION 0.12.20
+# bosh backup-and-restore cli version
+ENV BBR_CLI_VERSION 1.9.0
 
 RUN apk add --update-cache --no-cache \
       build-base libstdc++ curl tar bash openssl ca-certificates && \
@@ -47,6 +49,8 @@ RUN apk add --update-cache --no-cache \
     chmod +x /usr/local/bin/cf && \
     curl -fsL -o /usr/local/bin/om "https://github.com/pivotal-cf/om/releases/download/${OM_CLI_VERSION}/om-linux-${OM_CLI_VERSION}" && \
     chmod +x /usr/local/bin/om && \
+    curl -fsL -o /usr/local/bin/bbr "https://github.com/cloudfoundry-incubator/bosh-backup-and-restore/releases/download/v${BBR_CLI_VERSION}/bbr-${BBR_CLI_VERSION}-linux-amd64" && \
+    chmod +x /usr/local/bin/bbr && \
     curl -sfL -O https://releases.hashicorp.com/terraform/${TERRAFORM_CLI_VERSION}/terraform_${TERRAFORM_CLI_VERSION}_linux_amd64.zip && \
     unzip terraform_${TERRAFORM_CLI_VERSION}_linux_amd64.zip && \
     mv terraform /usr/local/bin/ && \
