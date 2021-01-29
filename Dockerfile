@@ -20,7 +20,7 @@ RUN apt-get install git \
 # base image
 FROM ruby:2.6-alpine as cf-tools
 # cf cli version
-ENV CF_CLI_VERSION 6.53.0
+ENV CF_CLI_VERSION 7.2.0
 # om cli version
 ENV OM_CLI_VERSION 7.2.0
 # uaac cli version
